@@ -1,0 +1,6 @@
+{
+  "name": "剧场票夹 (Theater Ticket Binder)",
+  "description": "用来记录和管理看过的剧场演出票根（音乐剧、话剧、舞剧等），支持票根图片、海报背景、日期印章样式、筛选搜索及数据导入导出。",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
