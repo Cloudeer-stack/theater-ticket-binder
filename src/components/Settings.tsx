@@ -42,8 +42,13 @@ export function Settings({ onDataChanged }: SettingsProps) {
     reader.onload = (event) => {
       const content = event.target?.result;
       if (typeof content === 'string') {
-        setPendingFileContent(content);
-        setShowImportConfirm(true);
+        try {
+          JSON.parse(content);
+          setPendingFileContent(content);
+          setShowImportConfirm(true);
+        } catch (e) {
+          setMessage('导入失败：不是有效的票根数据文件');
+        }
       }
     };
     reader.readAsText(file);
@@ -65,7 +70,6 @@ export function Settings({ onDataChanged }: SettingsProps) {
         setMessage('数据格式错误');
       }
     } catch (error) {
-      console.error(error);
       setMessage('导入失败或文件损坏');
     } finally {
       setLoading(false);

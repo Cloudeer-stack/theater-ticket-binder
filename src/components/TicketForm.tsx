@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Ticket, Category } from '../types';
-import { fileToBase64 } from '../lib/utils';
+import { compressImage } from '../lib/utils';
 import { X, Image as ImageIcon, Upload } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -49,9 +49,9 @@ export function TicketForm({ initialData, onSave, onCancel }: TicketFormProps) {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'ticketImage' | 'posterImage') => {
     const file = e.target.files?.[0];
     if (file) {
-      // Optional: resize or compress here if needed, but we'll just base64 it for now
        try {
-         const base64 = await fileToBase64(file);
+         // Compress image to a max width of 800px and 70% quality to save space
+         const base64 = await compressImage(file, 800, 0.7);
          setFormData({ ...formData, [field]: base64 });
        } catch (error) {
          console.error('Image upload failed', error);

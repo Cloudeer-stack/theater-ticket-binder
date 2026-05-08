@@ -11,8 +11,9 @@ import { TicketDetail } from './components/TicketDetail';
 import { TicketForm } from './components/TicketForm';
 import { Settings } from './components/Settings';
 import { TicketBinder } from './components/TicketBinder';
-import { Plus, Settings as SettingsIcon, ChevronLeft, Book, List } from 'lucide-react';
+import { Plus, Settings as SettingsIcon, ChevronLeft, Book, List, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
+import { compressImage } from './lib/utils';
 
 type View = 'list' | 'binder' | 'detail' | 'form' | 'settings';
 
@@ -21,10 +22,56 @@ export default function App() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [editingTicket, setEditingTicket] = useState<Ticket | null>(null);
+  const [isOptimizing, setIsOptimizing] = useState(false);
 
   useEffect(() => {
-    loadTickets();
+    loadAndOptimizeTickets();
   }, []);
+
+  const loadAndOptimizeTickets = async () => {
+    let data = await storage.getTickets();
+    
+    // Check if any old large images need compression
+    // base64 strings > 500,000 chars are roughly > 350KB, we can probably squeeze them more.
+    // Specially ones > 1,000,000 (which were definitely not compressed by us)
+    let needsOptimization = false;
+    for (const ticket of data) {
+      if ((ticket.ticketImage && ticket.ticketImage.length > 500000) || 
+          (ticket.posterImage && ticket.posterImage.length > 500000)) {
+        needsOptimization = true;
+        break;
+      }
+    }
+
+    if (needsOptimization) {
+      setIsOptimizing(true);
+      try {
+        const newData = [...data];
+        for (let i = 0; i < newData.length; i++) {
+          const t = newData[i];
+          let updated = false;
+          if (t.ticketImage && t.ticketImage.length > 500000) {
+            t.ticketImage = await compressImage(t.ticketImage, 800, 0.7);
+            updated = true;
+          }
+          if (t.posterImage && t.posterImage.length > 500000) {
+            t.posterImage = await compressImage(t.posterImage, 800, 0.7);
+            updated = true;
+          }
+          if (updated) {
+            await storage.updateTicket(t);
+          }
+        }
+        data = await storage.getTickets();
+      } catch (e) {
+        console.error('Failed to optimize old images', e);
+      } finally {
+        setIsOptimizing(false);
+      }
+    }
+
+    setTickets(data);
+  };
 
   const loadTickets = async () => {
     const data = await storage.getTickets();
@@ -85,6 +132,19 @@ export default function App() {
       {/* Main Content Area */}
       <main className="flex-1 relative overflow-hidden bg-neutral-50/50">
         <AnimatePresence mode="wait">
+          {isOptimizing && (
+            <motion.div
+              key="optimizing"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 z-50 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center pointer-events-none"
+            >
+              <Loader2 className="w-8 h-8 text-neutral-800 animate-spin mb-4" />
+              <p className="text-sm font-bold text-neutral-600">正在优化旧数据体积...</p>
+            </motion.div>
+          )}
+
           {view === 'list' && (
             <motion.div
               key="list"
