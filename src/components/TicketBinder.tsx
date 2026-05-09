@@ -14,8 +14,16 @@ export function TicketBinder({ tickets, onSelect }: TicketBinderProps) {
 
   const years = useMemo(() => {
     const yearsSet = new Set(tickets.map(t => new Date(t.date).getFullYear().toString()));
-    return Array.from(yearsSet).sort((a,b) => parseInt(b) - parseInt(a));
+    const sortedYears = Array.from(yearsSet).sort((a,b) => parseInt(b) - parseInt(a));
+    return ['全部', ...sortedYears];
   }, [tickets]);
+
+  const filteredTickets = useMemo(() => {
+    if (selectedYear === '全部') {
+      return [...tickets].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    }
+    return tickets.filter(t => new Date(t.date).getFullYear().toString() === selectedYear);
+  }, [tickets, selectedYear]);
 
   if (tickets.length === 0) {
     return (
@@ -34,8 +42,6 @@ export function TicketBinder({ tickets, onSelect }: TicketBinderProps) {
       />
     );
   }
-
-  const filteredTickets = tickets.filter(t => new Date(t.date).getFullYear().toString() === selectedYear);
 
   return (
     <BinderView 
@@ -65,7 +71,9 @@ function BinderShelf({ years, onSelectYear, tickets }: BinderShelfProps) {
 
       <div className="grid grid-cols-2 gap-6 relative z-10 max-w-lg mx-auto">
         {years.map((year) => {
-          const yearTickets = tickets.filter(t => new Date(t.date).getFullYear().toString() === year);
+          const yearTickets = year === '全部' 
+            ? tickets 
+            : tickets.filter(t => new Date(t.date).getFullYear().toString() === year);
           
           const THEMES = [
             'bg-neutral-900', // Black
@@ -75,7 +83,7 @@ function BinderShelf({ years, onSelectYear, tickets }: BinderShelfProps) {
             'bg-amber-950',   // Brown
             'bg-purple-950',  // Deep Purple
           ];
-          const colorClass = THEMES[parseInt(year) % THEMES.length];
+          const colorClass = year === '全部' ? 'bg-neutral-900' : THEMES[parseInt(year) % THEMES.length];
 
           return (
             <motion.div
@@ -335,11 +343,11 @@ function BinderView({ tickets, onSelect, onBack, year }: BinderViewProps) {
         </div>
 
         {/* Floating Pagination Controls */}
-        <div className="absolute bottom-6 left-0 right-0 flex justify-center items-center space-x-8 z-50 pointer-events-auto">
+        <div className="absolute inset-x-3 top-1/2 -translate-y-1/2 flex justify-between items-center z-50 pointer-events-auto">
           <button 
               onClick={(e) => { e.stopPropagation(); handlePrev(); }}
               disabled={currentIndex === 0}
-              className="w-12 h-12 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-md text-neutral-800 shadow-lg disabled:opacity-30 disabled:shadow-none hover:bg-white transition-all active:scale-95 border border-white/50"
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-md text-neutral-800 shadow-xl disabled:opacity-0 disabled:shadow-none hover:bg-white transition-all active:scale-95 border border-white/80"
           >
               <ChevronLeft className="w-6 h-6 -ml-0.5 text-neutral-600" />
           </button>
@@ -347,7 +355,7 @@ function BinderView({ tickets, onSelect, onBack, year }: BinderViewProps) {
           <button 
               onClick={(e) => { e.stopPropagation(); handleNext(); }}
               disabled={currentIndex === tickets.length - 1}
-              className="w-12 h-12 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-md text-neutral-800 shadow-lg disabled:opacity-30 disabled:shadow-none hover:bg-white transition-all active:scale-95 border border-white/50"
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-md text-neutral-800 shadow-xl disabled:opacity-0 disabled:shadow-none hover:bg-white transition-all active:scale-95 border border-white/80"
           >
               <ChevronRight className="w-6 h-6 ml-0.5 text-neutral-600" />
           </button>
