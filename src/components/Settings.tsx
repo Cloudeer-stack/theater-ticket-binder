@@ -17,14 +17,17 @@ export function Settings({ onDataChanged }: SettingsProps) {
       setLoading(true);
       const tickets = await storage.getTickets();
       const dataStr = JSON.stringify(tickets);
-      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
       
       const exportFileDefaultName = `tickets_backup_${new Date().toISOString().split('T')[0]}.json`;
       
       const linkElement = document.createElement('a');
-      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('href', url);
       linkElement.setAttribute('download', exportFileDefaultName);
       linkElement.click();
+      
+      URL.revokeObjectURL(url);
       setMessage('导出成功！');
     } catch (error) {
       console.error(error);
