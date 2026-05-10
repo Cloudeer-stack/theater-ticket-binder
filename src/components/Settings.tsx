@@ -12,15 +12,24 @@ export function Settings({ onDataChanged }: SettingsProps) {
   const [showImportConfirm, setShowImportConfirm] = useState(false);
   const [pendingFileContent, setPendingFileContent] = useState<string | null>(null);
 
-  const handleExport = async () => {
+  const handleExport = async (includeImages: boolean = true) => {
     try {
       setLoading(true);
-      const tickets = await storage.getTickets();
+      let tickets = await storage.getTickets();
+      
+      if (!includeImages) {
+        tickets = tickets.map(ticket => {
+          const { ticketImage, posterImage, ...rest } = ticket;
+          return rest;
+        });
+      }
+
       const dataStr = JSON.stringify(tickets);
       const blob = new Blob([dataStr], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       
-      const exportFileDefaultName = `tickets_backup_${new Date().toISOString().split('T')[0]}.json`;
+      const fileNameSuffix = includeImages ? '' : '_no_images';
+      const exportFileDefaultName = `tickets_backup${fileNameSuffix}_${new Date().toISOString().split('T')[0]}.json`;
       
       const linkElement = document.createElement('a');
       linkElement.setAttribute('href', url);
@@ -96,13 +105,24 @@ export function Settings({ onDataChanged }: SettingsProps) {
 
       <div className="space-y-4">
         <button
-          onClick={handleExport}
+          onClick={() => handleExport(true)}
           disabled={loading}
           className="w-full flex items-center justify-between p-4 bg-white border border-neutral-200 rounded-xl hover:border-neutral-400 active:bg-neutral-50 transition-all font-bold text-neutral-800"
         >
           <span className="flex items-center">
             <Download className="w-5 h-5 mr-3 text-neutral-500" />
-            导出备份文件 (JSON)
+            导出备份文件 (完整/含图片)
+          </span>
+        </button>
+
+        <button
+          onClick={() => handleExport(false)}
+          disabled={loading}
+          className="w-full flex items-center justify-between p-4 bg-white border border-neutral-200 rounded-xl hover:border-neutral-400 active:bg-neutral-50 transition-all font-bold text-neutral-800"
+        >
+          <span className="flex items-center">
+            <Download className="w-5 h-5 mr-3 text-neutral-500" />
+            导出统计数据 (仅文本/不含图片)
           </span>
         </button>
 
