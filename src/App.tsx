@@ -107,7 +107,7 @@ export default function App() {
   };
 
   return (
-    <div className="max-w-md mx-auto h-screen relative bg-neutral-100 overflow-hidden shadow-2xl flex flex-col font-sans">
+    <div className="max-w-md mx-auto h-[100dvh] relative bg-slate-50 overflow-hidden shadow-2xl flex flex-col font-sans">
       {/* Header */}
       <header className="flex-none bg-white/80 backdrop-blur-md border-b border-black/5 z-20 px-4 pt-[env(safe-area-inset-top,0.5rem)] pb-2 flex flex-row items-center justify-between sticky top-0 min-h-[3.5rem]">
         <div className="flex items-center w-full mt-2">
@@ -120,17 +120,17 @@ export default function App() {
               }}
               className="p-2 -ml-2 rounded-full hover:bg-black/5 transition-colors absolute left-4"
             >
-              <ChevronLeft className="w-6 h-6 text-neutral-700" />
+              <ChevronLeft className="w-6 h-6 text-slate-600" />
             </button>
           )}
-          <h1 className="text-lg font-bold text-neutral-800 tracking-tight flex-1 text-center">
+          <h1 className="text-lg font-bold text-slate-700 tracking-tight flex-1 text-center">
             {view === 'settings' ? '设置' : view === 'form' ? (editingTicket ? '编辑票根' : '添加票根') : view === 'detail' ? '票根详情' : '剧场票夹'}
           </h1>
         </div>
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 relative overflow-hidden bg-neutral-50/50">
+      <main className="flex-1 relative overflow-hidden bg-slate-50/50">
         <AnimatePresence mode="wait">
           {isOptimizing && (
             <motion.div
@@ -140,8 +140,8 @@ export default function App() {
               exit={{ opacity: 0 }}
               className="absolute inset-0 z-50 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center pointer-events-none"
             >
-              <Loader2 className="w-8 h-8 text-neutral-800 animate-spin mb-4" />
-              <p className="text-sm font-bold text-neutral-600">正在优化旧数据体积...</p>
+              <Loader2 className="w-8 h-8 text-teal-600 animate-spin mb-4" />
+              <p className="text-sm font-bold text-slate-600">正在优化旧数据体积...</p>
             </motion.div>
           )}
 
@@ -166,7 +166,7 @@ export default function App() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="absolute inset-0 bg-[#e8e4dc] pb-24"
+              className="absolute inset-0 bg-[#eef2f6] pb-24"
             >
               <TicketBinder
                 tickets={tickets} 
@@ -230,23 +230,23 @@ export default function App() {
           {/* Floating Action Button */}
           <button
             onClick={handleCreate}
-            className="absolute bottom-24 right-4 w-14 h-14 bg-neutral-900 text-white rounded-[1.25rem] flex items-center justify-center shadow-xl active:scale-95 transition-transform hover:bg-neutral-800 z-40 border border-white/20"
+            className="absolute bottom-24 right-4 w-14 h-14 bg-teal-500 text-white rounded-[1.25rem] flex items-center justify-center shadow-xl shadow-teal-500/30 active:scale-95 transition-transform hover:bg-teal-400 z-40 border border-white/20"
           >
             <Plus className="w-6 h-6" />
           </button>
           
-          <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-black/5 pb-[env(safe-area-inset-bottom,0.5rem)] z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+          <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100 pb-[env(safe-area-inset-bottom,0.5rem)] z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
             <div className="flex justify-around items-center px-6 pt-2 pb-1 h-14 max-w-sm mx-auto">
               <button
                 onClick={() => setView('list')}
-                className={`flex flex-col items-center justify-center w-16 gap-1 transition-colors ${view === 'list' ? 'text-neutral-900' : 'text-neutral-400'}`}
+                className={`flex flex-col items-center justify-center w-16 gap-1 transition-colors ${view === 'list' ? 'text-teal-600' : 'text-slate-400 hover:text-slate-600'}`}
               >
                 <List className="w-6 h-6 flex-shrink-0" />
                 <span className="text-[10px] font-bold leading-none">列表</span>
               </button>
               <button
                 onClick={() => setView('binder')}
-                className={`flex flex-col items-center justify-center w-16 gap-1 transition-colors ${view === 'binder' ? 'text-neutral-900' : 'text-neutral-400'}`}
+                className={`flex flex-col items-center justify-center w-16 gap-1 transition-colors ${view === 'binder' ? 'text-teal-600' : 'text-slate-400 hover:text-slate-600'}`}
               >
                 <Book className="w-6 h-6 flex-shrink-0" />
                 <span className="text-[10px] font-bold leading-none">票夹</span>
@@ -254,7 +254,7 @@ export default function App() {
               
                <button
                 onClick={() => setView('settings')}
-                 className={`flex flex-col items-center justify-center w-16 gap-1 transition-colors ${view === 'settings' ? 'text-neutral-900' : 'text-neutral-400'}`}
+                 className={`flex flex-col items-center justify-center w-16 gap-1 transition-colors ${view === 'settings' ? 'text-teal-600' : 'text-slate-400 hover:text-slate-600'}`}
               >
                 <SettingsIcon className="w-6 h-6 flex-shrink-0" />
                 <span className="text-[10px] font-bold leading-none">设置</span>

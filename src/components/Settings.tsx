@@ -95,10 +95,10 @@ export function Settings({ onDataChanged }: SettingsProps) {
   };
 
   return (
-    <div className="p-6 space-y-8 font-sans h-full bg-neutral-50 relative">
+    <div className="p-6 space-y-8 font-sans h-full bg-slate-50 relative">
       <div>
-        <h2 className="text-xl font-bold text-neutral-800 mb-2">数据备份与恢复</h2>
-        <p className="text-sm text-neutral-500">
+        <h2 className="text-xl font-bold text-slate-800 mb-2">数据备份与恢复</h2>
+        <p className="text-sm text-slate-500">
           你的数据存储在本地浏览器中。为了防止数据丢失，建议定期导出备份。
         </p>
       </div>
@@ -107,10 +107,10 @@ export function Settings({ onDataChanged }: SettingsProps) {
         <button
           onClick={() => handleExport(true)}
           disabled={loading}
-          className="w-full flex items-center justify-between p-4 bg-white border border-neutral-200 rounded-xl hover:border-neutral-400 active:bg-neutral-50 transition-all font-bold text-neutral-800"
+          className="w-full flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-teal-300 hover:shadow-md hover:shadow-teal-500/10 active:bg-slate-50 transition-all font-bold text-slate-700"
         >
           <span className="flex items-center">
-            <Download className="w-5 h-5 mr-3 text-neutral-500" />
+            <Download className="w-5 h-5 mr-3 text-teal-600" />
             导出备份文件 (完整/含图片)
           </span>
         </button>
@@ -118,10 +118,10 @@ export function Settings({ onDataChanged }: SettingsProps) {
         <button
           onClick={() => handleExport(false)}
           disabled={loading}
-          className="w-full flex items-center justify-between p-4 bg-white border border-neutral-200 rounded-xl hover:border-neutral-400 active:bg-neutral-50 transition-all font-bold text-neutral-800"
+          className="w-full flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-teal-300 hover:shadow-md hover:shadow-teal-500/10 active:bg-slate-50 transition-all font-bold text-slate-700"
         >
           <span className="flex items-center">
-            <Download className="w-5 h-5 mr-3 text-neutral-500" />
+            <Download className="w-5 h-5 mr-3 text-teal-600" />
             导出统计数据 (仅文本/不含图片)
           </span>
         </button>
@@ -129,10 +129,10 @@ export function Settings({ onDataChanged }: SettingsProps) {
         <div className="relative">
           <button
             disabled={loading}
-            className="w-full flex items-center justify-between p-4 bg-white border border-neutral-200 rounded-xl hover:border-neutral-400 active:bg-neutral-50 transition-all font-bold text-neutral-800"
+            className="w-full flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-teal-300 hover:shadow-md hover:shadow-teal-500/10 active:bg-slate-50 transition-all font-bold text-slate-700"
           >
             <span className="flex items-center">
-               <Upload className="w-5 h-5 mr-3 text-neutral-500" />
+               <Upload className="w-5 h-5 mr-3 text-teal-600" />
                导入备份数据
             </span>
           </button>
@@ -145,35 +145,35 @@ export function Settings({ onDataChanged }: SettingsProps) {
         </div>
       </div>
 
-      <div className="bg-orange-50 border border-orange-100 p-4 rounded-xl flex items-start space-x-3">
-        <AlertCircle className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
-        <div className="text-sm text-orange-800 leading-relaxed">
+      <div className="bg-amber-50 border border-amber-200/50 p-4 rounded-xl flex items-start space-x-3">
+        <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+        <div className="text-sm text-amber-800 leading-relaxed">
           <strong>注意：</strong> 导入操作会完全覆盖当前票夹的所有内容，且含有图片的 JSON 文件可能较大，请耐心等待处理完成。
         </div>
       </div>
 
       {message && (
-        <div className="text-center text-sm font-bold p-3 bg-neutral-800 text-white rounded-lg animate-in fade-in zoom-in slide-in-from-bottom-2">
+        <div className="text-center text-sm font-bold p-3 bg-teal-600 text-white rounded-lg animate-in fade-in zoom-in slide-in-from-bottom-2 shadow-lg shadow-teal-500/20">
           {message}
         </div>
       )}
 
       {/* Confirmation Dialog */}
       {showImportConfirm && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6">
-          <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl">
-            <h3 className="text-lg font-bold mb-2">导入票根数据</h3>
-            <p className="text-sm text-neutral-500 mb-6">导入操作会完全覆盖当前票夹的所有内容，确定要继续吗？</p>
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-6">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+            <h3 className="text-lg font-bold mb-2 text-slate-800">导入票根数据</h3>
+            <p className="text-sm text-slate-500 mb-6">导入操作会完全覆盖当前票夹的所有内容，确定要继续吗？</p>
             <div className="flex space-x-3">
               <button 
                 onClick={cancelImport}
-                className="flex-1 py-2.5 rounded-lg font-bold text-neutral-600 bg-neutral-100 hover:bg-neutral-200 transition-colors"
+                className="flex-1 py-2.5 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
               >
                 取消
               </button>
               <button 
                 onClick={confirmImport}
-                className="flex-1 py-2.5 rounded-lg font-bold text-white bg-neutral-800 hover:bg-neutral-900 transition-colors"
+                className="flex-1 py-2.5 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-500 transition-colors shadow-lg shadow-teal-500/20"
               >
                 确定导入
               </button>
